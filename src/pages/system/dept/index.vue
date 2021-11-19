@@ -68,11 +68,8 @@
           ref="tree"
           :class="$q.screen.gt.xs?'q-mr-xs':''"
           node-key="id"
-          label-key="label"
+          label-key="name"
           :nodes="treeDatas"
-          filter-key-like="nameLetter"
-          filter-key-equal="id"
-          filter-placeholder="ID、名称、拼音首字母"
           selected-color="primary"
           selectable
           @update:selected="handleTreeNodeClick"
