@@ -51,7 +51,7 @@ module.exports = function (ctx) {
     // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-build
     build: {
       vueRouterMode: 'history', // available values: 'hash', 'history'
-      publicPath: '/coadmin-web-quasar/',
+      publicPath: '/',
       env: {
         VUE_APP_BASE_API: ctx.dev
           ? 'http://localhost:8000'
