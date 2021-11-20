@@ -56,7 +56,14 @@
             :disable="!!crud.status.view">
             <template v-slot:prepend><q-icon :name="form.icon" /></template>
             <template v-slot:append>
-              <q-btn icon="search" dense flat />
+              <q-btn icon="search" dense flat>
+                  <q-popup-proxy transition-show="flip-up" transition-hide="flip-down">
+                    <q-btn v-for="item in iconsList" :key="item.name" size="md" flat text-color="primary" @click="choseIcon(item.name)">
+                      <q-icon :name="item.name">
+                      </q-icon>
+                    </q-btn>
+                  </q-popup-proxy>
+              </q-btn>
             </template>
           </co-input>
           <co-field class="col-12 col-sm-6" borderless v-if="form.type===0 || form.type===1"></co-field>
@@ -253,11 +260,13 @@ export default {
       },
       menuDatas: [],
       treeSelectExpanded: [],
-      filterTable: ''
+      filterTable: '',
+      iconsList: []
     }
   },
   created () {
     this.init()
+    this.searchIcon('icons')
   },
   computed: {
     ...mapGetters('permission', [
@@ -280,6 +289,35 @@ export default {
     handleTreeNodeClick (id) {
       this.query.pid = id
       this.crud.toQuery()
+    },
+    searchIcon(iconSet) {
+      if (iconSet) {
+        // detect if UMD version is installed
+        if (window.IconPicker) {
+          const name = iconSet.replace(/-([a-z])/g, g => g[1].toUpperCase())
+          if (window.IconPicker.iconSet && window.IconPicker.iconSet[name]) {
+            const iconsSet = window.IconPicker.iconSet[name]
+            this.iconsList = iconsSet.icons
+          } else {
+            /* eslint-disable */
+              console.error('IconPicker: no icon set loaded called \'' + iconSet + '\'')
+              console.error('Be sure to load the UMD version of the icon set in a script tag before using QIconPicker UMD version')
+              /* eslint-enable */
+          }
+        } else {
+          try {
+            const iconsSet = require('assets/' + iconSet + '.js').default
+            this.iconsList = iconsSet.icons
+          } catch (e) {
+            // eslint-disable-next-line no-console
+            console.error('IconPicker: cannot find icon set found called \'' + iconSet + '\'')
+          }
+        }
+      }
+    },
+    choseIcon(target) {
+      console.log(target)
+      this.form.icon = target
     }
   }
 }
