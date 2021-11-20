@@ -137,7 +137,7 @@
         <co-input class="col-12 col-sm-6" form-label="子模块名称" v-model="formTable.subModuleName" :rules="[
           val => (!!val) || '必填'
           ]"/>
-        <co-field class="col-12 col-sm-6" readonly borderless value="比如 api/{子模块名称}/xxx"/>
+        <co-field class="col-12 col-sm-6" readonly borderless value="前端要生成的子模块名称"/>
 
         <co-input class="col-12 col-sm-6" form-label="JAVA Module名称" v-model="formTable.moduleName" :rules="[
           val => (!!val) || '必填'
@@ -157,7 +157,7 @@
         <co-input class="col-12 col-sm-6" form-label="前端Vue存放路径" v-model="formTable.path" :rules="[
           val => (!!val) || '必填'
           ]"/>
-        <co-field class="col-12 col-sm-6" readonly borderless value="示例[d:\src\pages]，不存在会自动创建"/>
+        <co-field class="col-12 col-sm-6" readonly borderless value="示例[d:\src\pages]，生成的子模块路径，不存在会自动创建"/>
 
         <co-input class="col-12 col-sm-6" form-label="前端Api接口目录" v-model="formTable.apiPath" :rules="[
           val => (!!val) || '必填'
