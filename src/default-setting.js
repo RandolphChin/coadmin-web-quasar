@@ -181,9 +181,9 @@ module.exports = {
   /**
    * 底部文字，支持html语法
    */
-  footerTxt: '© 2020 XXYY 版权所有',
+  footerTxt: 'Apache License 2.0',
   /**
    * 备案号
    */
-  caseNumber: '粤ICP备xxxxxx号-1'
+  caseNumber: ''
 }

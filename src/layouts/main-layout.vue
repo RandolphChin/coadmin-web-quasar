@@ -420,13 +420,16 @@
         <q-page-scroller position="bottom" :scroll-offset="150" :offset="fabPos" style="z-index:6;">
           <q-btn fab-mini icon="keyboard_arrow_up" color="primary" v-touch-pan.capture="moveFab" v-touch-pan.prevent.mouse="moveFab" :disable="draggingFab"/>
         </q-page-scroller>
-
-        <div class="text-body2" style="text-align:center" v-show="settingShowFooter">
-          {{settingFooterTxt}} {{settingCaseNumber}}
-        </div>
       </q-page>
     </q-page-container>
-
+    <q-footer
+      class="text-blue-grey-4 bg-white" v-show="settingShowFooter"
+    >
+      <q-separator />
+      <div class="q-ma-xs">
+        <div class="text-center">{{settingFooterTxt}} {{settingCaseNumber}} </div>
+      </div>
+    </q-footer>
   </q-layout>
 </template>
 
