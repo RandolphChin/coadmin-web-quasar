@@ -127,8 +127,14 @@ export default {
       type: Boolean,
       default: undefined
     },
-    size: String,
-    padding: String,
+    size: {
+      type: String,
+      default: 'md'
+    },
+    padding: {
+      type: String,
+      default: 'xs md'
+    },
 
     colorView: {
       type: String,
@@ -136,7 +142,7 @@ export default {
     },
     colorAdd: {
       type: String,
-      default: 'secondary'
+      default: 'primary'
     },
     colorEdit: {
       type: String,

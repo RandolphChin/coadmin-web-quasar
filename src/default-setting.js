@@ -4,11 +4,11 @@ module.exports = {
   /**
    * @description 网站标题
    */
-  title: 'CoAdmin管理系统',
+  title: 'Admin管理系统',
   /**
    * @description 是否显示 tagsView
    */
-  tagsView: false,
+  tagsView: true,
   /**
    * @description tagsView==true 顶部显示，否则底部显示
    */

@@ -15,6 +15,8 @@
     :push="_push()"
     :unelevated="_unelevated()"
     :rounded="_rounded()"
+    :icon="icon"
+    :label="label"
     >
     <template v-for="slotName in Object.keys($slots)" v-slot:[slotName]>
       <slot :name="slotName"/>
@@ -59,6 +61,14 @@ export default {
     },
     round: {
       type: Boolean,
+      default: undefined
+    },
+    icon: {
+      type: String,
+      default: undefined
+    },
+    label: {
+      type: String,
       default: undefined
     }
 

@@ -166,14 +166,14 @@
       :loading="delLoading" :disable="delLoading">
       <q-tooltip :delay="550" v-if="tooltip">{{labelDel}}</q-tooltip>
       <q-popup-proxy>
-        <co-card style="min-width: 160px;" class="bg-deep-orange">
+        <co-card style="min-width: 160px;">
           <q-card-section class="">
-            <div class="text-subtitle1 text-no-wrap text-white">{{msgDel}}</div>
+            <div class="text-subtitle1 text-no-wrap">{{msgDel}}</div>
           </q-card-section>
           <q-separator />
           <q-card-actions align="right" class="q-pa-md">
-            <co-btn v-close-popup flat color="white">取消</co-btn>
-            <co-btn v-close-popup flat color="white" icon="delete" @click="doDelete">删除</co-btn>
+            <co-btn v-close-popup flat>取消</co-btn>
+            <co-btn v-close-popup flat icon="delete" @click="doDelete">删除</co-btn>
           </q-card-actions>
         </co-card>
       </q-popup-proxy>

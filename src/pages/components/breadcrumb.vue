@@ -1,5 +1,5 @@
 <template>
-  <q-breadcrumbs class="q-ml-md">
+  <q-breadcrumbs class="q-ml-md" active-color="dark">
     <template v-for="(item, index) in levelList">
       <q-breadcrumbs-el v-if="!mobileLess || $q.screen.gt.xs || index === levelList.length - 1"
         :key="item.path"

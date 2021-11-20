@@ -21,7 +21,7 @@
       <q-toolbar>
         <template v-if="!sidebarTop || !$q.screen.gt.xs">
           <q-avatar class="q-logo" @click="leftDrawerOpen = !leftDrawerOpen">
-            <img src="~assets/logo.svg" />
+            <img src="~assets/logo.png" />
           </q-avatar>
           <q-toolbar-title
             shrink
@@ -364,7 +364,7 @@
               <q-item>
                 <q-item-section avatar v-if="sidebarLogo">
                   <q-avatar class="q-logo">
-                    <img src="~assets/logo.svg" />
+                    <img src="~assets/logo.png" />
                   </q-avatar>
                 </q-item-section>
                 <q-item-section>
@@ -691,23 +691,26 @@ export default {
 
 <style lang="scss" scoped>
 .co-sidebar .sidebar-body  ::v-deep .q-separator {
-  background: rgb(165 165 165 / 41%);
+  // background: rgb(165 165 165 / 41%);
+  background-color: white;
 }
+/*
 .layout-main-bg-image {
   background-image: url("~assets/index.svg");
   background-repeat: no-repeat;
   background-position: center 0px;
   background-size: 100%;
 }
+*/
 
 .body--dark .layout-main-bg-image {
 }
 
-.co-sidebar.main-page-sidebar ::v-deep > .q-drawer {
+/*.co-sidebar.main-page-sidebar ::v-deep > .q-drawer {
   background-image: url("~assets/sidebar-bg.jpg") !important;
   background-size: cover !important;
   background-repeat: no-repeat;
-}
+}*/
 .xpagetagviews-normal {
   background-color: #eeeeee;  // $grey-3
   color: var(--q-color-primary);
