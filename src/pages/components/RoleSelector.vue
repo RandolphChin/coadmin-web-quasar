@@ -28,7 +28,6 @@ export default {
   },
   created() {
     getAll().then(res => {
-      console.log('res=', res)
       this.roleList = res.data
     }).catch(err => {
       console.log('err', err)

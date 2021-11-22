@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function add(data) {
   return request({
-    url: 'api/jobs',
+    url: 'api/quartz',
     method: 'post',
     data
   })
@@ -10,7 +10,7 @@ export function add(data) {
 
 export function del(data) {
   return request({
-    url: 'api/jobs',
+    url: 'api/quartz',
     method: 'delete',
     data
   })
@@ -18,7 +18,7 @@ export function del(data) {
 
 export function edit(data) {
   return request({
-    url: 'api/jobs',
+    url: 'api/quartz',
     method: 'put',
     data
   })
@@ -26,7 +26,7 @@ export function edit(data) {
 
 export function pauseJob(data) {
   return request({
-    url: 'api/jobs/pauseJob',
+    url: 'api/quartz/pauseJob',
     method: 'put',
     data
   })
@@ -34,7 +34,7 @@ export function pauseJob(data) {
 
 export function resumeJob(data) {
   return request({
-    url: 'api/jobs/resumeJob',
+    url: 'api/quartz/resumeJob',
     method: 'put',
     data
   })
@@ -42,7 +42,7 @@ export function resumeJob(data) {
 
 export function execution(data) {
   return request({
-    url: 'api/jobs/runOnce/',
+    url: 'api/quartz/runOnce/',
     method: 'post',
     data
   })

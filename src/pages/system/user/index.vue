@@ -323,7 +323,7 @@ export default {
     },
     getJobDatas () {
       getAllJob().then(res => {
-        this.jobDatas = res.data.content
+        this.jobDatas = res.content
       }).catch(err => {
         console.error('getJobDatas:', err)
         this.crud.notifyError('获取岗位失败：', err)

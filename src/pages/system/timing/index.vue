@@ -166,7 +166,7 @@ export default {
   name: 'Timing',
   components: { CrudOperation, CrudMore, CrudPagination },
   cruds() {
-    return CRUD({ columns, visibleColumns, idField: 'jobName', sort: ['jobName,desc'], title: '定时任务', url: 'api/jobs', crudMethod: { ...crudTiming } })
+    return CRUD({ columns, visibleColumns, idField: 'jobName', sort: ['jobName,desc'], title: '定时任务', url: 'api/quartz', crudMethod: { ...crudTiming } })
   },
   mixins: [presenter(), header(), form(defaultForm), crud()],
   data () {
