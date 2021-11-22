@@ -8,11 +8,11 @@ export function add(data) {
   })
 }
 
-export function del(ids) {
+export function del(data) {
   return request({
     url: 'api/jobs',
     method: 'delete',
-    data: ids
+    data
   })
 }
 
@@ -24,18 +24,28 @@ export function edit(data) {
   })
 }
 
-export function updateIsPause(id) {
+export function pauseJob(data) {
   return request({
-    url: 'api/jobs/' + id,
-    method: 'put'
+    url: 'api/jobs/pauseJob',
+    method: 'put',
+    data
   })
 }
 
-export function execution(id) {
+export function resumeJob(data) {
   return request({
-    url: 'api/jobs/exec/' + id,
-    method: 'put'
+    url: 'api/jobs/resumeJob',
+    method: 'put',
+    data
   })
 }
 
-export default { del, updateIsPause, execution, add, edit }
+export function execution(data) {
+  return request({
+    url: 'api/jobs/runOnce/',
+    method: 'post',
+    data
+  })
+}
+
+export default { del, resumeJob, pauseJob, execution, add, edit }

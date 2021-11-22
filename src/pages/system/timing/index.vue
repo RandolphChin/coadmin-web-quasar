@@ -19,34 +19,20 @@
         label-width="medium"
         label-align="right"
         class="q-px-lg q-my-none row q-col-gutter-x-xl q-col-gutter-y-md">
-          <co-field class="col-12" form-label="ID" :value="form.id" readonly borderless v-show="form.id"/>
           <co-input class="col-12" form-label="任务名称" v-model="form.jobName" :disable="!!crud.status.view" :rules="[
               val => (!!val) || '必填'
               ]"/>
-          <co-input class="col-12" autogrow form-label="任务描述" v-model="form.description" :disable="!!crud.status.view"/>
-          <co-input class="col-12" form-label="Bean名称" v-model="form.beanName" :disable="!!crud.status.view" :rules="[
+          <co-input class="col-12" autogrow form-label="分组" v-model="form.groupName" :disable="!!crud.status.view" :rules="[
               val => (!!val) || '必填'
               ]"/>
-          <co-input class="col-12" form-label="执行方法" v-model="form.methodName" :disable="!!crud.status.view" :rules="[
+          <co-input class="col-12" form-label="jobClass名称" v-model="form.jobClass" :disable="!!crud.status.view" :rules="[
               val => (!!val) || '必填'
               ]"/>
+          <co-input class="col-12" form-label="json格式参数" v-model="form.param" :disable="!!crud.status.view" />
           <co-input class="col-12" form-label="Cron表达式" v-model="form.cronExpression" :disable="!!crud.status.view" :rules="[
               val => (!!val) || '必填'
               ]"/>
-          <co-input class="col-12" form-label="子任务ID" v-model="form.subTask" placeholder="多个用逗号隔开，按顺序执行" :disable="!!crud.status.view"/>
-          <co-input class="col-12" form-label="任务负责人" v-model="form.personInCharge" :disable="!!crud.status.view"/>
-          <co-input class="col-12" form-label="告警邮箱" v-model="form.email" :disable="!!crud.status.view"/>
-          <co-field class="col-12" form-label="失败后暂停" :disable="!!crud.status.view">
-            <template v-slot:control>
-              <co-option-group
-                v-model="form.pauseAfterFailure"
-                :disable="!!crud.status.view"
-                inline
-                :options="[{label:'是', value: true}, {label: '否', value: false}]"
-                type="radio"
-              />
-            </template>
-          </co-field>
+        <!--
           <co-field class="col-12" form-label="任务状态" :disable="!!crud.status.view">
             <template v-slot:control>
               <co-option-group
@@ -59,7 +45,7 @@
               />
             </template>
           </co-field>
-          <co-input class="col-12" form-label="参数内容" v-model="form.params" :disable="!!crud.status.view"/>
+        -->
       </co-form>
       <q-card-actions class="q-px-lg q-pt-lg q-pb-md" align="right">
         <co-btn label="取消" flat v-close-popup/>
@@ -67,8 +53,6 @@
           :loading="crud.status.cu === crud.STATUS_PROCESSING" :disable="crud.status.cu === crud.STATUS_PROCESSING"/>
       </q-card-actions>
     </co-dialog>
-
-    <jobs-log ref="jobsLog"/>
 
     <co-table
       ref="table"
@@ -79,7 +63,7 @@
       :visible-columns="crud.visibleColumns"
       :title="crud.title"
       :loading="crud.loading"
-      selection="single"
+      selection="multiple"
       :selected.sync="crud.selections"
       :filter="filterTable"
       @row-click="(evt, row, index) => crud.selections = [row]"
@@ -91,7 +75,7 @@
             class="col-auto"
             label="状态"
             content-style="width:120px"
-            v-model="query.isPause"
+            v-model="query.triggerState"
             no-filter
             :options="dict.jobs_status"
             @input="crud.toQuery()"
@@ -100,8 +84,8 @@
             map-options
           />
           <co-input
-            v-model="query.blurry"
-            label="ID、任务名、执行方法"
+            v-model="query.jobName"
+            label="名称"
             content-style="width:200px"
             clearable
             @change="crud.toQuery()"
@@ -111,10 +95,10 @@
             <co-btn color="primary" icon="search" @click="crud.toQuery()" />
           </div>
           <q-space/>
-          <crud-operation :permission="permission">
+          <crud-operation :permission="permission" noDel>
             <template v-slot:end>
               <!-- 任务日志 -->
-              <co-btn label="任务日志" color="info" padding="xs sm" @click="$refs.jobsLog.show()"/>
+              <co-btn label="任务日志" color="info" padding="xs sm" />
             </template>         </crud-operation>
           <div>
             <co-btn-dropdown color="primary" class="btn-dropdown-hide-droparrow" icon="apps" auto-close>
@@ -129,20 +113,24 @@
         </div>
       </template>
 
-      <template v-slot:body-cell-isPause="props">
-        <q-td key="isPause" :props="props">
-          {{dict.label.jobs_status[props.row.isPause]}}
+      <template v-slot:body-cell-triggerState="props">
+        <q-td key="triggerState" :props="props">
+          {{dict.label.jobs_status[props.row.triggerState]}}
         </q-td>
       </template>
 
       <template v-slot:body-cell-action="props">
         <q-td :props="props">
-          <crud-row flat no-icon
-            no-add
-            :type="$q.screen.gt.xs?'button':'menu'"
-            :data="props.row"
-            :permission="permission"
-          />
+          <co-btn label="执行" flat color="positive" @click="execute(props.row)"/>
+          <co-btn flat color="primary" @click="updateStatus(props.row)">
+            <template v-if="props.row.triggerState ==='PAUSED'">
+              恢复
+            </template>
+            <template v-else>
+              暂停
+            </template>
+          </co-btn>
+          <co-btn label="删除" flat color="negative" @click="delItem(props.row)"/>
         </q-td>
       </template>
 
@@ -159,31 +147,26 @@ import { mapGetters } from 'vuex'
 import CRUD, { presenter, header, form, crud } from '@crud/crud'
 import CrudOperation from '@crud/crud-operation'
 import CrudPagination from '@crud/crud-pagination'
-import CrudRow from '@crud/crud-row'
 import CrudMore from '@crud/crud-more'
 import crudTiming from '@/api/system/timing'
-import JobsLog from './jobsLog.vue'
 
-const defaultForm = { id: null, jobName: null, description: null, subTask: null, beanName: null, methodName: null, params: null, cronExpression: null, pauseAfterFailure: true, isPause: false, personInCharge: null, email: null }
-const visibleColumns = ['jobName', 'beanName', 'description', 'methodName', 'cronExpression', 'isPause', 'subTask', 'params', 'action']
+const defaultForm = { jobName: null, groupName: null, jobClass: null, param: null, cronExpression: null }
+const visibleColumns = ['jobName', 'groupName', 'cronExpression', 'isPause', 'jobClass', 'param', 'triggerState', 'action']
 const columns = [
-  { name: 'id', field: 'id', label: 'ID' },
   { name: 'jobName', field: 'jobName', label: '名称', required: true, align: 'left' },
-  { name: 'description', field: 'description', label: '任务描述', align: 'left', classes: 'ellipsis', style: 'max-width:150px' },
-  { name: 'beanName', field: 'beanName', label: 'Bean名称', sortable: true },
-  { name: 'methodName', field: 'methodName', label: '执行方法', sortable: true },
+  { name: 'groupName', field: 'groupName', label: '任务分组', align: 'left' },
+  { name: 'jobClass', field: 'jobClass', label: '执行方法', sortable: true },
   { name: 'cronExpression', field: 'cronExpression', label: 'Corn表达式' },
-  { name: 'isPause', field: 'isPause', label: '状态' },
-  { name: 'subTask', field: 'subTask', label: '子任务' },
-  { name: 'params', field: 'params', label: '参数内容' },
+  { name: 'param', field: 'param', label: '参数内容' },
+  { name: 'triggerState', field: 'triggerState', label: '状态' },
   { name: 'action', label: '操作', align: 'center' }
 ]
 
 export default {
   name: 'Timing',
-  components: { CrudOperation, CrudMore, CrudPagination, CrudRow, JobsLog },
+  components: { CrudOperation, CrudMore, CrudPagination },
   cruds() {
-    return CRUD({ columns, visibleColumns, idField: 'id', sort: ['id,desc'], title: '定时任务', url: 'api/jobs', crudMethod: { ...crudTiming } })
+    return CRUD({ columns, visibleColumns, idField: 'jobName', sort: ['jobName,desc'], title: '定时任务', url: 'api/jobs', crudMethod: { ...crudTiming } })
   },
   mixins: [presenter(), header(), form(defaultForm), crud()],
   data () {
@@ -200,6 +183,40 @@ export default {
     ...mapGetters('permission', [
       'dict'
     ])
+  },
+  methods: {
+    execute(data) {
+      crudTiming.execution(data).then(res => {
+        this.crud.notify('执行成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
+      }).catch(err => {
+        console.log(err.response.data.message)
+      })
+    },
+    updateStatus(data) {
+      if (data.triggerState === 'PAUSED') {
+        crudTiming.resumeJob(data).then(res => {
+          this.crud.toQuery()
+          this.crud.notify(status + '成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
+        }).catch(err => {
+          console.log(err.response.data.message)
+        })
+      } else {
+        crudTiming.pauseJob(data).then(res => {
+          this.crud.toQuery()
+          this.crud.notify(status + '成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
+        }).catch(err => {
+          console.log(err.response.data.message)
+        })
+      }
+    },
+    delItem(data) {
+      crudTiming.del(data).then(res => {
+        this.crud.toQuery()
+        this.crud.notify(status + '成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
+      }).catch(err => {
+        console.log(err.response.data.message)
+      })
+    }
   }
 }
 </script>
