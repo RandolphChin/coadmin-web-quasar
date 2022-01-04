@@ -47,6 +47,7 @@ export default {
           }
         } else {
           try {
+            // https://v4.mui.com/components/material-icons/
             const iconsSet = require('assets/' + iconSet + '.js').default
             this.iconsList = iconsSet.icons
           } catch (e) {

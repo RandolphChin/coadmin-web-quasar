@@ -1009,6 +1009,8 @@ export default {
     { name: 'whatshot', tags: [] },
     { name: 'widgets', tags: [] },
     { name: 'wifi', tags: [] },
+    { name: 'wifi_off', tags: [] },
+    { name: 'music_off', tags: [] },
     { name: 'wifi_lock', tags: [] },
     { name: 'wifi_tethering', tags: [] },
     { name: 'work', tags: ['health'] },
