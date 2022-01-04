@@ -4,7 +4,7 @@
     dense
     align="left"
     class="full-width"
-    xxxxcontent-class="custom-table-bg"
+    content-class="custom-table-bg"
     :breakpoint="0"
     :inline-label="true"
     outside-arrows
@@ -20,9 +20,28 @@
       @click.middle.native="!isAffix(tab)?closeTab(tab):''"
     >
       <div class="row items-center no-wrap">
-        <span class="q-mr-xs">{{tab.title}}</span>
-        <q-btn v-if="!isAffix(tab)" @click.stop="closeTab(tab)" icon="close" flat size="8px" round/>
-      </div>
+      <span class="q-mr-xs">{{tab.title}}</span>
+      <q-btn v-if="!isAffix(tab)" @click.stop="closeTab(tab)" icon="close" flat size="8px" round/>
+    </div>
+      <template slot="default">
+        <q-menu
+          touch-position
+          context-menu
+        >
+          <q-list dense>
+            <q-item clickable v-close-popup>
+              <q-item-section @click="removeOthersTagView(tab)">
+                关闭其他
+              </q-item-section>
+            </q-item>
+            <q-item clickable v-close-popup>
+              <q-item-section @click="removeAllTagView">
+                关闭所有
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-menu>
+      </template>
     </q-tab>
   </q-tabs>
 </template>
@@ -139,6 +158,14 @@ export default {
         }
       })
       return tags
+    },
+    removeAllTagView () {
+      this.$store.dispatch('tagviews/delAllViews')
+      this.$router.push({ path: '/' })
+    },
+    removeOthersTagView (tab) {
+      this.$store.dispatch('tagviews/delOthersViews', tab)
+      this.$router.push({ path: tab.path })
     }
   }
 }
